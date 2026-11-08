@@ -3,7 +3,7 @@
   "name": "Mise à jour",
   "version": "1.1.1",
   "author": "NDesumeur",
-  "description": "La version de NeoDex, la recherche de mises à jour (téléchargement et redémarrage en un clic) et les plugins à mettre à jour.",
+  "description": "Plugin système : ta version de NeoDex et d'Electron, le type d'installation, la recherche de mises à jour à la demande, le téléchargement avec barre de progression puis le redémarrage en un clic (signature vérifiée avant l'installation), les notes de version, et la liste des plugins qui ont une nouvelle version au NeoStore.",
   "icon": "icon.png",
   "entry": "index.js",
   "view": "miseajour",
