@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.miseajour",
   "repo": "NDesumeur/neodex-plugin-miseajour",
-  "version": "1.1.2",
-  "sha256": "0a1ab9fe13fc9e186c3b14869d9c2c17d863f4b829667e36b3742cfb4ae534e5",
-  "approvedAt": "2026-11-08T12:10:48.519Z",
+  "version": "1.2.0",
+  "sha256": "dd992c5772378be5a6e0c7f930b113c2883bad27e7b0599d53f852ae88cc1c2b",
+  "approvedAt": "2026-11-16T04:14:37.231Z",
   "neobase": ">=4.0.0",
-  "signature": "pmw6pkcocH9VyYu1Xlhe9mzs81q2M7QVduJmP1DF+awoL56CiqADLKYyCtYOgRN8vBgwqJlmYiWL1EjEgWuVAw=="
+  "signature": "vIxyd4JZRgIFmcBgfO1UalHx36XZV8J5UsW6NSm1W9WfS54oUbq9TkW0cjls6JyloL/7cXFehv1f3e0OCEPxBQ=="
 }
