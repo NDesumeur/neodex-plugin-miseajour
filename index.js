@@ -4,10 +4,12 @@ export default async function (ctx) {
   const view = ctx.view;
   if (!ctx.host) { view.textContent = "Ce plugin doit être approuvé par NeoDex pour s'ouvrir."; return; }
   const { el, toast, newTab } = ctx.host;
-  ctx.host.addStyle(`.muWrap{display:flex;flex-direction:column;gap:14px;max-width:760px}
+  ctx.host.addStyle(`.muWrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,1.2vw,22px);align-items:start}
+.muWrap>.muHero,.muWrap>.muActC{grid-column:1/-1}
+@media (max-width:900px){.muWrap{grid-template-columns:1fr}}
 .muWrap .muHero{display:flex;flex-direction:row;gap:18px;align-items:center;padding:18px}
-.muHero img{width:72px;height:72px;image-rendering:pixelated}
-.muVer{font-size:30px;line-height:1.1}
+.muHero img{width:clamp(72px,5.5vw,104px);height:clamp(72px,5.5vw,104px);image-rendering:pixelated}
+.muVer{font-size:clamp(30px,2.4vw,44px);line-height:1.1}.muWrap .hint,.muWrap .muRows,.muWrap .muList{font-size:clamp(14px,.95vw,17px)}
 .muOk{color:#7fe08a}.muNew{color:#ffd166}
 .muWrap .muRows{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;padding:14px 18px}
 .muRows b{text-align:right}
@@ -18,7 +20,7 @@ export default async function (ctx) {
   const btn = (label, run, main) => { const b = el('button', 'btn px' + (main ? ' main' : ''), label); b.onclick = () => Promise.resolve(run(b)).catch(e => toast(String(e.message || e).replace(/^.*Error: /, ''), true)); return b; };
   const head = el('div', 'agHead'); head.append(el('span', 'label', 'Mise à jour'));
   const wrap = el('div', 'muWrap');
-  view.replaceChildren(el('div', 'appWrap')); const app = view.firstChild; app.append(head, wrap);
+  view.replaceChildren(el('div', 'appWrap wide')); const app = view.firstChild; app.append(head, wrap);
   async function draw() {
     const info = await neo.appInfo().catch(() => ({ version: '?', packaged: false }));
     const upd = info.packaged ? await neo.appUpdateState().catch(() => null) : null;
@@ -53,8 +55,10 @@ export default async function (ctx) {
       } catch { box.firstChild?.remove(); const h = el('div', 'hint', 'Plugins : catalogue indisponible.'); h.style.padding = '14px 18px'; box.prepend(h); }
     }
     showUpd(upd); if (upd?.state === 'available' || upd?.state === 'error' || !info.packaged) { /* déjà affiché */ }
-    box.append(plug); const card = el('div', 'sysCard px'); card.append(act);
-    wrap.replaceChildren(hero, rows, card, box); plugins();
+    // le titre d'abord : plugins() remplace le premier enfant de la carte (avant, c'était la liste elle-même)
+    const h0 = el('div', 'hint', 'Recherche des mises à jour des plugins…'); h0.style.padding = '14px 18px 8px';
+    box.append(h0, plug); const card = el('div', 'sysCard px muActC'); card.append(act);
+    wrap.replaceChildren(hero, rows, box, card);  // en grand écran : la version et les plugins côte à côte, les boutons dessous plugins();
   }
   const off = neo.onAppUpdate?.(u => { if (view.isConnected) draw(); });
   ctx.onOpen(draw);

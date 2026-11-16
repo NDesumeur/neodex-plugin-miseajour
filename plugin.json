@@ -1,9 +1,9 @@
 {
   "id": "neodex.miseajour",
   "name": "Mise à jour",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "author": "NDesumeur",
-  "description": "Plugin système : ta version de NeoDex et d'Electron, le type d'installation, la recherche de mises à jour à la demande, le téléchargement avec barre de progression puis le redémarrage en un clic (signature vérifiée avant l'installation), les notes de version, et la liste des plugins qui ont une nouvelle version au NeoStore.",
+  "description": "Plugin système : ta version de NeoDex et d'Electron, le type d'installation, la recherche de mises à jour à la demande, le téléchargement avec barre de progression puis le redémarrage en un clic (signature vérifiée avant l'installation), les notes de version, et la liste des plugins qui ont une nouvelle version au NeoStore. S'adapte à la taille de l'écran : en grand écran, la version et les mises à jour des plugins côte à côte, textes plus grands ; la liste des plugins à mettre à jour ne disparaît plus au premier affichage.",
   "icon": "icon.png",
   "entry": "index.js",
   "view": "miseajour",

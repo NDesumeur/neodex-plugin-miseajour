@@ -1,0 +1,13 @@
+// lancé par le test « local » de NeoDex : la page Mise à jour (lecture seule, aucun bouton cliqué) met la version et les plugins côte à côte en grand écran, rien ne déborde
+module.exports = async ({ pj, sleep }) => {
+  let ok = false; for (let i = 0; i < 20 && !(ok = await pj(`!!document.querySelector('.muRows')`)); i++) await sleep(300);
+  await sleep(800);
+  const r = await pj(`(() => { const a = document.querySelector('.muRows').getBoundingClientRect(), b = document.querySelector('.muList').closest('.sysCard').getBoundingClientRect();
+    return { side: Math.abs(a.top - b.top) < 4 && b.left > a.right, w: innerWidth, ver: parseFloat(getComputedStyle(document.querySelector('.muVer')).fontSize),
+      over: [...document.querySelectorAll('.appWrap *')].filter(e => e.getBoundingClientRect().right > innerWidth + 1).length }; })()`);
+  if (!ok) throw new Error('page vide');
+  if (r.over) throw new Error(r.over + ' élément(s) débordent à droite');
+  if (r.w >= 1400 && !r.side) throw new Error('version et plugins pas côte à côte en grand écran : ' + JSON.stringify(r));
+  await sleep(800);
+  return (r.side ? 'côte à côte' : 'l’un sous l’autre') + ', version en ' + r.ver + ' px';
+};
