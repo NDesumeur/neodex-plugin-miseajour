@@ -4,6 +4,10 @@ Le plugin système qui montre ta version de NeoDex, cherche les nouvelles versio
 
 *English version: [README.en.md](README.en.md)*
 
+## Revenir à une version précédente (nouveau en 1.3.0)
+
+Si une version te pose un problème : REVENIR À UNE VERSION PRÉCÉDENTE… liste les 5 versions plus anciennes de NeoDex, signées et vérifiées ; un clic et NeoDex redémarre dessus, données gardées. Il faut NeoDex 3.4.2.
+
 ## Ce qu'il affiche
 
 - **NeoDex** et son numéro de version, avec l'état de la mise à jour juste en dessous.
@@ -33,3 +37,12 @@ Rien n'est synchronisé : le plugin ne garde aucune donnée.
 Plugin système : il est livré avec NeoDex, ne peut pas être désinstallé et ne s'ouvre que s'il est signé par NeoDex.
 
 Développer un plugin : voir le [SDK NeoDex](https://github.com/NDesumeur/neodex-sdk).
+
+## Revenir à une version précédente (1.3.0)
+
+Une nouvelle version te pose un problème ? **REVENIR À UNE VERSION PRÉCÉDENTE…** liste les 5 versions plus anciennes de NeoDex.
+
+- **REVENIR À x.y.z** télécharge cette version, vérifie sa signature comme pour une mise à jour, ferme NeoDex et le relance dessus.
+- Tes données et tes plugins sont gardés.
+- NeoDex ne te repropose pas tout seul la version que tu viens de quitter ; **VÉRIFIER LES MISES À JOUR** la retrouve quand tu veux.
+- Il faut NeoDex 3.4.2 ou plus récent, installé (pas une copie de développement).

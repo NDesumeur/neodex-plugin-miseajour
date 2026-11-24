@@ -4,6 +4,10 @@ The system plugin that shows your NeoDex version, looks for new versions and ins
 
 *Version française : [README.md](README.md)*
 
+## Go back to a previous version (new in 1.3.0)
+
+If a version gives you trouble: GO BACK TO A PREVIOUS VERSION… lists the 5 older NeoDex versions, signed and checked; one click and NeoDex restarts on it, data kept. Needs NeoDex 3.4.2.
+
 ## What it shows
 
 - **NeoDex** and its version number, with the update status just below.
@@ -33,3 +37,12 @@ Nothing is synced: the plugin keeps no data.
 System plugin: it ships with NeoDex, cannot be uninstalled and only opens when signed by NeoDex.
 
 Building a plugin: see the [NeoDex SDK](https://github.com/NDesumeur/neodex-sdk).
+
+## Go back to a previous version (1.3.0)
+
+A new version gives you trouble? **GO BACK TO A PREVIOUS VERSION…** lists the 5 older versions of NeoDex.
+
+- **GO BACK TO x.y.z** downloads that version, checks its signature like an update, closes NeoDex and restarts it on that version.
+- Your data and plugins are kept.
+- NeoDex does not offer again by itself the version you just left; **CHECK FOR UPDATES** finds it whenever you want.
+- NeoDex 3.4.2 or newer is needed, installed (not a development copy).

@@ -16,7 +16,9 @@ export default async function (ctx) {
 .muWrap .muAct{display:flex;flex-direction:row;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 18px}
 .muProg{height:14px;background:var(--bg2,#241a38);border:2px solid var(--line,#3a3448);width:100%}.muProg i{display:block;height:100%;background:#3fb8c8;width:0}
 .muWrap .muList{display:flex;flex-direction:column;gap:6px;padding:0 18px 16px}
-.muList div{display:flex;gap:10px;align-items:center;justify-content:space-between}`);
+.muList div{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.muWrap .muBack{display:flex;flex-direction:column;gap:8px;padding:0 18px 16px}
+.muBack .muVers{display:flex;flex-direction:column;gap:6px}.muBack .muVers div{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:6px 10px;background:color-mix(in srgb,var(--line2,#3a2a6e) 30%,#000)}`);
   const btn = (label, run, main) => { const b = el('button', 'btn px' + (main ? ' main' : ''), label); b.onclick = () => Promise.resolve(run(b)).catch(e => toast(String(e.message || e).replace(/^.*Error: /, ''), true)); return b; };
   const head = el('div', 'agHead'); head.append(el('span', 'label', 'Mise à jour'));
   const wrap = el('div', 'muWrap');
@@ -30,6 +32,27 @@ export default async function (ctx) {
     const rows = el('div', 'sysCard px muRows');
     for (const [k, v] of [['Version', info.version], ['Moteur', 'Electron ' + (info.electron || '?')], ['Installation', info.packaged ? 'installée : mises à jour automatiques' : 'copie de développement']]) rows.append(el('span', 'hint', k), el('b', '', v));
     const act = el('div', 'muAct'), plug = el('div', 'muList'), box = el('div', 'sysCard px');
+    // revenir en arrière : la liste des versions signées plus anciennes, lue au clic ; la version choisie s'installe comme une mise à jour
+    const back = el('div', 'muBack');
+    async function backList(b) {
+      if (!neo.appVersions) return toast('Cette version de NeoDex ne sait pas encore revenir en arrière : il faut NeoDex 3.4.2 ou plus récent.', true);
+      b.disabled = true; back.replaceChildren(el('div', 'hint', 'Lecture des versions…'));
+      try {
+        const r = await neo.appVersions();
+        if (r.state === 'dev') { back.replaceChildren(el('div', 'hint', 'Copie de développement : le retour en arrière ne marche que dans NeoDex installé.')); return; }
+        const vers = el('div', 'muVers');
+        for (const x of r.list) {
+          const row = el('div'), go = btn('REVENIR À ' + x.version, () => rollback(x.version));
+          row.append(el('span', '', 'NeoDex ' + x.version + (x.date ? ' · ' + new Date(x.date).toLocaleDateString() : '')), go); vers.append(row);
+        }
+        back.replaceChildren(el('div', 'label', 'Revenir à une version précédente'), el('div', 'hint', r.list.length ? 'Si la version ' + r.current + ' te pose un problème : NeoDex télécharge la version choisie (signée, vérifiée comme une mise à jour), se ferme et redémarre dessus. Tes données et tes plugins sont gardés.' : 'Aucune version plus ancienne disponible.'), vers);
+      } catch (e) { back.replaceChildren(el('div', 'hint', 'Liste impossible : ' + String(e.message || e).replace(/^.*Error: /, ''))); }
+      finally { b.disabled = false; }
+    }
+    async function rollback(v) {
+      if (!confirm(ctx.host.t ? ctx.host.t('NeoDex va revenir à la version') + ' ' + v + ctx.host.t(', se fermer et redémarrer. Tes données et tes plugins sont gardés. Pour retrouver la dernière version plus tard : VÉRIFIER LES MISES À JOUR. Continuer ?') : 'NeoDex va revenir à la version ' + v + ', se fermer et redémarrer. Tes données et tes plugins sont gardés. Pour retrouver la dernière version plus tard : VÉRIFIER LES MISES À JOUR. Continuer ?')) return;
+      const u = await neo.appRollback(v); showUpd(u);
+    }
     const showUpd = u => {
       act.replaceChildren();
       if (u?.state === 'available') { st.textContent = 'NeoDex ' + u.version + ' est disponible.'; st.className = 'hint muNew'; act.append(btn('TÉLÉCHARGER ET REDÉMARRER', b => { b.disabled = true; return neo.appInstallUpdate(); }, true)); }
@@ -39,6 +62,8 @@ export default async function (ctx) {
       else { st.textContent = info.packaged ? 'Dernière vérification : à l\'instant ou au lancement.' : 'Version de développement : pas de mise à jour automatique.'; st.className = 'hint'; }
       if (!act.children.length || u?.state === 'none') act.append(btn('VÉRIFIER LES MISES À JOUR', check, !u || u.state !== 'available'));
       act.append(btn('NOTES DE VERSION', () => newTab('https://github.com/NDesumeur/neodex-releases/releases')));
+      if (u?.rollback && u.state === 'downloading') st.textContent = 'Retour à la version ' + u.version + ' : ' + (u.percent || 0) + ' %';
+      if (u?.state !== 'downloading' && u?.state !== 'ready') { const bb = btn('REVENIR À UNE VERSION PRÉCÉDENTE…', backList); bb.title = 'si cette version te pose un problème'; act.append(bb); }
     };
     async function check() {
       st.textContent = 'Recherche en cours…'; const r = await neo.appCheckUpdate();
@@ -57,7 +82,7 @@ export default async function (ctx) {
     showUpd(upd); if (upd?.state === 'available' || upd?.state === 'error' || !info.packaged) { /* déjà affiché */ }
     // le titre d'abord : plugins() remplace le premier enfant de la carte (avant, c'était la liste elle-même)
     const h0 = el('div', 'hint', 'Recherche des mises à jour des plugins…'); h0.style.padding = '14px 18px 8px';
-    box.append(h0, plug); const card = el('div', 'sysCard px muActC'); card.append(act);
+    box.append(h0, plug); const card = el('div', 'sysCard px muActC'); card.append(act, back);
     wrap.replaceChildren(hero, rows, box, card);  // en grand écran : la version et les plugins côte à côte, les boutons dessous plugins();
   }
   const off = neo.onAppUpdate?.(u => { if (view.isConnected) draw(); });
